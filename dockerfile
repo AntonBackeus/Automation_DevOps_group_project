@@ -1,9 +1,10 @@
 FROM python:3.11-slim
 
+ENV DB_PATH = "/app/data_warehouse/jobads.duckdb"
 WORKDIR /app/dashboard
 
 COPY dashboard/ /app/dashboard/
-     data_wareghouse/ /app/data_warehouse/
+     data_warehouse/ /app/data_warehouse/
 
 RUN pip install streamlit duckdb pandas
 
