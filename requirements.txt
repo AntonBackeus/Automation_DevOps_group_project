@@ -55,7 +55,6 @@ python-dateutil==2.9.0.post0
 python-slugify==8.0.4
 pytimeparse==1.1.8
 pytz==2025.2
-pywin32==311
 pyyaml==6.0.3
 referencing==0.37.0
 requests==2.32.5
@@ -78,5 +77,4 @@ typing-extensions==4.15.0
 typing-inspection==0.4.2
 tzdata==2025.2
 urllib3==2.5.0
-win-precise-time==1.4.2
 zipp==3.23.0
