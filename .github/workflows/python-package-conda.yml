@@ -70,7 +70,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: duckdb-database-dbt
-          path: ./data_warehouse/jobads.duckdb
+          path: ./data_warehouse/job_ads.duckdb
 
   build-and-push:
     needs: [run-dlt, run-dbt]
