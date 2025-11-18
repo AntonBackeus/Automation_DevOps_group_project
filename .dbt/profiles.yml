@@ -3,4 +3,4 @@ dbt_devops:
   outputs:
     dev:
       type: duckdb
-      path: "../data_warehouse/jobads.duckdb"
+      path: "../data_warehouse/job_ads.duckdb"
