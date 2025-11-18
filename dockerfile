@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-ENV DUCKDB_PATH=/app/data_warehouse/duckdb-database-dbt.duckdb
+ENV DUCKDB_PATH=/app/data_warehouse/job_ads.duckdb
 WORKDIR /app/dashboard
 
 COPY dashboard/ /app/dashboard/
