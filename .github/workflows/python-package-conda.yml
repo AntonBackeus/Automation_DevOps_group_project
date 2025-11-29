@@ -119,11 +119,20 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
  
       - name: Build and push to Docker Hub
-        uses: docker/build-push-action@v6
+        id: docker_build
+        run: |
+          {
+            docker buildx build \
+              --push \
+              --file ./Dockerfile \
+              --tag antonbackeus/hranalyticsdashboard:latest \
+              --tag antonbackeus/hranalyticsdashboard:1.${{ github.run_number }} \
+              . 
+          } 2> docker_error.log
+
+      - name: Upload Docker build logs
+        if: failure() && steps.docker_build.outcome == 'failure'
+        uses: actions/upload-artifact@v4
         with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: |
-            antonbackeus/hranalyticsdashboard:latest
-            antonbackeus/hranalyticsdashboard:1.${{ github.run_number }}
+          name: docker-build-error-logs
+          path: docker-build.log
