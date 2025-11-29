@@ -82,7 +82,7 @@ jobs:
           dbt run > dbt_run_error.log 2>&1
 
       - name: Upload dbt run logs
-        if: steps.dbt_run.conclusion == 'failure'
+        if: steps.dbt_run.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: dbt-run-error-logs
@@ -95,7 +95,7 @@ jobs:
           dbt test > dbt_test_error.log 2>&1
 
       - name: Upload dbt test logs
-        if: steps.dbt_test.conclusion == 'failure'
+        if: steps.dbt_test.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: dbt-test-error-logs
