@@ -94,9 +94,7 @@ jobs:
         working-directory: ./dbt_analytics
         id: dbt_test
         run: |
-          {
-            dbt test
-          } 2> dbt_test_error.log
+          dbt test > dbt_test_error.log 2>&1
 
       - name: Upload dbt test logs
         if: failure() && steps.dbt_test.outcome == 'failure'
