@@ -4,7 +4,7 @@ import sys
 
 # Expected tables/views by schema
 warehouse = {
-    "fct_job_ads": ["job_description_id", "occupation_id", "auxilliary_id", "employer_id", "job_details_id"],
+    "fct_job_ads": ["job_description_id", "occupation_id", "auxilliary_id", "employer_id", "job_details_id", "vacancies", "application_deadline", "relevance"],
     "dim_occupation": ["occupation_id", "occupation", "occupation_group", "occupation_field"],
     "dim_job_details": ["job_details_id", "employment_type", "salary_type", "duration", "scope_of_work_min", "scope_of_work_max"],
     "dim_job_description": ["job_description_id", "headline", "description_text", "description_html"],

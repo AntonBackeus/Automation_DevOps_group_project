@@ -13,7 +13,7 @@ select
     o.occupation_field,
     f.application_deadline,
     j.headline,
-    -- e.employer_name,  --deleteMe
+    e.employer_name,
     d.employment_type,
     d.salary_type,
     d.duration,
