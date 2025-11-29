@@ -46,8 +46,7 @@ def jobsearch_resource(params):
 
         # yield each ad on this page
         for ad in hits:
-            #yield ad
-            pass #deleteMe
+            yield ad
 
         # if fewer than a full page was returned, we’re done
         if len(hits) < limit or offset > 1900:
