@@ -16,6 +16,10 @@ Exit codes:
 
 DB_PATH = "./data_warehouse/job_ads.duckdb"
 
+import os
+
+assert os.path.exists(DB_PATH), f"Database not found at {DB_PATH}"
+
 EXPECTED_SCHEMAS = {
     "fct_job_ads": {
         "job_description_id": "INTEGER",
