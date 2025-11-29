@@ -14,7 +14,7 @@ Exit codes:
 2 = Unexpected error (DB missing/unreadable)
 """
 
-DB_PATH = "./data_warehouse/analytics.duckdb"
+DB_PATH = "./data_warehouse/job_ads.duckdb"
 
 EXPECTED_SCHEMAS = {
     "fct_job_ads": {
