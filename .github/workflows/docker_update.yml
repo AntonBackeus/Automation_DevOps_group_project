@@ -1,4 +1,4 @@
-name: Run dlt + dbt pipeline
+name: Generate and Push Docker Image Application
 
 on:
   schedule:
