@@ -23,36 +23,82 @@ marts = {
 }
 
 
-def validate_tables(con, schema_name: str, objects: dict, object_type="table"):
+def get_existing_objects(con, schema_name: str, object_type="table"):
+    """Return a list of table or view names in the schema."""
+    if object_type == "table":
+        query = f"""
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema='{schema_name}' AND table_type='BASE TABLE'
+        """
+    else:
+        query = f"""
+            SELECT table_name
+            FROM information_schema.views
+            WHERE table_schema='{schema_name}'
+        """
+    return [t[0] for t in con.execute(query).fetchall()]
+
+
+def get_existing_columns(con, schema_name: str, table_name: str):
+    """Return a list of column names for a given table or view."""
+    query = f"""
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_schema='{schema_name}' AND table_name='{table_name}'
     """
-    Validate that all tables or views exist and are not empty.
-    object_type: 'table' or 'view'
-    """
+    return [c[0] for c in con.execute(query).fetchall()]
+
+
+def check_object_exists(name: str, existing_objects: list, object_type="table"):
+    """Check if the table/view exists."""
+    if name not in existing_objects:
+        print(f"ERROR: Missing {object_type} '{name}'")
+        return False
+    return True
+
+
+def check_not_empty(con, schema_name: str, name: str, object_type="table"):
+    """Check if the table/view is not empty."""
+    count = con.execute(f"SELECT COUNT(*) FROM {schema_name}.{name}").fetchone()[0]
+    if count == 0:
+        print(f"ERROR: {object_type} '{name}' is empty")
+        return False
+    return True
+
+
+def check_columns(con, schema_name: str, name: str, expected_columns: list):
+    """Check for missing or unexpected columns."""
     ok = True
-    for name, columns in objects.items():
-        if object_type == "table":
-            query = f"""
-                SELECT table_name
-                FROM information_schema.tables
-                WHERE table_schema='{schema_name}' AND table_type='BASE TABLE'
-            """
-        else:
-            query = f"""
-                SELECT table_name
-                FROM information_schema.views
-                WHERE table_schema='{schema_name}'
-            """
+    existing_columns = get_existing_columns(con, schema_name, name)
 
-        existing = [t[0] for t in con.execute(query).fetchall()]
+    # Missing columns
+    for col in expected_columns:
+        if col not in existing_columns:
+            print(f"ERROR: Missing column '{col}' in '{name}'")
+            ok = False
 
-        if name not in existing:
-            print(f"ERROR: Missing {object_type} '{name}' in schema '{schema_name}'")
+    # Extra columns
+    for col in existing_columns:
+        if col not in expected_columns:
+            print(f"ERROR: Unexpected column '{col}' in '{name}'")
+            ok = False
+
+    return ok
+
+
+def validate_tables(con, schema_name: str, objects: dict, object_type="table"):
+    """Main validation function that checks existence, non-empty, and columns."""
+    ok = True
+    existing_objects = get_existing_objects(con, schema_name, object_type)
+    
+    for name, expected_columns in objects.items():
+        if not check_object_exists(name, existing_objects, object_type):
             ok = False
             continue
-
-        result = con.execute(f"SELECT COUNT(*) FROM {schema_name}.{name}").fetchone()[0]
-        if result == 0:
-            print(f"ERROR: {object_type} '{name}' in schema '{schema_name}' is empty")
+        if not check_not_empty(con, schema_name, name, object_type):
+            ok = False
+        if not check_columns(con, schema_name, name, expected_columns):
             ok = False
 
     return ok
