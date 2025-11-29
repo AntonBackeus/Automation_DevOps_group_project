@@ -29,7 +29,7 @@ def jobsearch_resource(params):
       - "q": your query
       - "limit": page size (e.g. 100)
     """
-    url = "deleteMe" + "https://jobsearch.api.jobtechdev.se"
+    url = "https://jobsearch.api.jobtechdev.se"
     url_for_search = f"{url}/search"
     limit = params.get("limit", 100)
     offset = 0
