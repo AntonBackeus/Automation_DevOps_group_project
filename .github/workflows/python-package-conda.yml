@@ -29,13 +29,19 @@ jobs:
       - name: Run dlt pipeline
         run: |
           echo "Running dlt pipeline..."
-          python extract_load/load_jobs.py
+          python extract_load/load_jobs.py 2> dlt_error.log
+          exit_code=$?
+          if [ $exit_code -ne 0 ]; then
+            echo "dlt pipeline failed. See dlt_error.log."
+            exit $exit_code
+          fi
 
-      - name: Upload DuckDB database as artifact
+      - name: Upload dlt error log (only if failed)
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: duckdb-database-dlt
-          path: ./data_warehouse/job_ads.duckdb
+          name: dlt-error-log
+          path: dlt_error.log
           
   run-dbt:
     needs: run-dlt
