@@ -77,16 +77,33 @@ jobs:
 
       - name: Run dbt models
         working-directory: ./dbt_analytics
+        id: dbt_run
         run: |
-          mkdir -p ../logs
-          dbt run 2>&1 | tee ../logs/dbt.log
+          {
+            dbt run
+          } 2> dbt_run_error.log
 
-      - name: Upload dbt logs if failure
-        if: failure()
+      - name: Upload dbt run logs
+        if: failure() && steps.dbt_run.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: dbt-error-log
-          path: ./logs/dbt.log
+          name: dbt-run-error-logs
+          path: dbt_run_error.log
+
+      - name: Run dbt tests
+        working-directory: ./dbt_analytics
+        id: dbt_test
+        run: |
+          {
+            dbt test
+          } 2> dbt_test_error.log
+
+      - name: Upload dbt test logs
+        if: failure() && steps.dbt_test.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-test-error-logs
+          path: dbt_test_error.log
           
       - name: Upload DuckDB database as artifact
         if: success()
