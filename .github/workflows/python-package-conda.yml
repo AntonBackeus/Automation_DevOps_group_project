@@ -42,6 +42,13 @@ jobs:
         with:
           name: dlt-error-log
           path: dlt_error.log
+
+      - name: Upload DuckDB database as artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: duckdb-database-dlt
+          path: ./data_warehouse/job_ads.duckdb
           
   run-dbt:
     needs: run-dlt
