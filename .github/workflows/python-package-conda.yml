@@ -59,41 +59,49 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+      
       - name: Download DuckDB database artifact
         uses: actions/download-artifact@v4
         with:
           name: duckdb-database-dlt
           path: ./data_warehouse 
-          
+        
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          
+        
       - name: Install dbt
         run: |
           pip install dbt-core dbt-duckdb
 
       - name: Run dbt models
         working-directory: ./dbt_analytics
+        id: dbt_run
         run: |
-          mkdir -p ../logs
-          dbt run 2>&1 | tee ../logs/dbt.log
+          dbt run > dbt_run_error.log 2>&1
 
-      - name: Upload dbt logs if failure
-        if: failure()
+      - name: Run dbt tests
+        working-directory: ./dbt_analytics
+        id: dbt_test
+        run: |
+          dbt test > dbt_test_error.log 2>&1
+
+      - name: Upload dbt logs on failure
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dbt-error-log
-          path: ./logs/dbt.log
-          
+          name: dbt-error-logs
+          path: ./dbt_analytics/*.log
+
+
       - name: Upload DuckDB database as artifact
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: duckdb-database-dbt
           path: ./data_warehouse/job_ads.duckdb
+
 
   build-and-push:
     needs: [run-dlt, run-dbt]
