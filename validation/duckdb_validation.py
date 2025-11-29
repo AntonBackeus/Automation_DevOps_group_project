@@ -31,9 +31,19 @@ def validate_tables(con, schema_name: str, objects: dict, object_type="table"):
     ok = True
     for name, columns in objects.items():
         if object_type == "table":
-            existing = [t[0] for t in con.execute(f"SHOW TABLES IN {schema_name}").fetchall()]
+            query = f"""
+                SELECT table_name
+                FROM information_schema.tables
+                WHERE table_schema='{schema_name}' AND table_type='BASE TABLE'
+            """
         else:
-            existing = [v[0] for v in con.execute(f"SHOW VIEWS IN {schema_name}").fetchall()]
+            query = f"""
+                SELECT table_name
+                FROM information_schema.views
+                WHERE table_schema='{schema_name}'
+            """
+
+        existing = [t[0] for t in con.execute(query).fetchall()]
 
         if name not in existing:
             print(f"ERROR: Missing {object_type} '{name}' in schema '{schema_name}'")
