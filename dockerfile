@@ -6,6 +6,6 @@ WORKDIR /app/dashboard
 COPY dashboard/ /app/dashboard/
 COPY data_warehouse/ /app/data_warehouse/
 
-RUN pip install streamlit duckdb pandas
+# RUN pip install streamlit duckdb pandas
 
 CMD ["streamlit", "run", "dashboard.py", "--server.port=8501"]

@@ -11,6 +11,7 @@ models:
               to: ref('dim_occupation')
               field: occupation_id
           - not_null
+          - unique #deleteMe
       - name: auxilliary_id
         description: "Reference to supplementary job attributes."
         tests: 

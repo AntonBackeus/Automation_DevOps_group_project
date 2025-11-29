@@ -29,7 +29,7 @@ def jobsearch_resource(params):
       - "q": your query
       - "limit": page size (e.g. 100)
     """
-    url = "https://jobsearch.api.jobtechdev.se"
+    url = "deleteMe" + "https://jobsearch.api.jobtechdev.se"
     url_for_search = f"{url}/search"
     limit = params.get("limit", 100)
     offset = 0
@@ -46,7 +46,8 @@ def jobsearch_resource(params):
 
         # yield each ad on this page
         for ad in hits:
-            yield ad
+            #yield ad
+            pass #deleteMe
 
         # if fewer than a full page was returned, we’re done
         if len(hits) < limit or offset > 1900:
