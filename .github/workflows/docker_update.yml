@@ -65,9 +65,10 @@ jobs:
         with:
           python-version: "3.11"
         
-      - name: Install dbt
+      - name: Install dependencies
         run: |
-          pip install dbt-core dbt-duckdb
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run dbt models
         working-directory: ./dbt_analytics
